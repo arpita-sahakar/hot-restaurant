@@ -29,7 +29,7 @@
         <br />
 
         <div class="text-center">
-          <a href="/view"
+          <a href="/tables"
             ><button type="button" class="btn btn-lg btn-primary">
               <span class="glyphicon glyphicon-list-alt"></span> View Tables
             </button></a
@@ -90,8 +90,8 @@
       <footer class="footer">
         <div class="container">
           <p>
-            <a href="/api/tables">API Table Link</a> |
-            <a href="/api/waitlist">API Wait List</a>
+            <a href="/view-confirmed-resv">API Table Link</a> |
+            <a href="/view-waitlist-resv">API Wait List</a>
           </p>
         </div>
       </footer>
@@ -103,20 +103,32 @@
 <script type="text/javascript">
   $("#sub-resv").on("click", function (event) {
     event.preventDefault();
+      let name =  $("#reserve_name").val().trim();
+      let phNum =  $("#reserve_phone").val().trim();
+      let email = $("#reserve_email").val().trim();
+      let uniqID =  $("#reserve_uniqueID").val().trim();
+    
+
     let resvObj = {
-      cusName: $("#reserve_name").val().trim(),
-      phNo: $("#reserve_phone").val().trim(),
-      cusEmail: $("#reserve_email").val().trim(),
-      uniqId: $("#reserve_uniqueID").val().trim(),
+      cusName: name,
+      phNo: phNum,
+      cusEmail: email,
+      uniqId: uniqID,
     };
-    //$.post - syntex that we will use to send our object; 
-    // /reservation- is the address where the object will be sent
-    // resvObj - is our object that we have created
-    // function(data)- data is the place where we will receive response from server
-    $.post("/reservation", resvObj).then(function (data) {
-      console.log("added reservation");
-      console.log(data);
-    });
+
+    $("#reserve_name").val("");
+    $("#reserve_phone").val("");
+    $("#reserve_email").val("");
+    $("#reserve_uniqueID").val("");
+
+    
+
+
+    $.post("/bookTable", resvObj).then(function(data){
+      alert("reserving...")
+      console.log("reserved " + data.status);
+    })
+
   });
   // In this code below we create the Front-end Javascript which "POSTS" our form data to our express server.
   // In essence, when the user hits submit, jQuery grabs all of the fields then sends a post request to our api

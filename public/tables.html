@@ -29,7 +29,7 @@
         <br />
 
         <div class="text-center">
-          <a href="/make"
+          <a href="/reserve"
             ><button type="button" class="btn btn-lg btn-danger">
               <span class="glyphicon glyphicon-credit-card"></span> Make
               Reservation
@@ -67,8 +67,8 @@
           <p>Control Panel</p>
           <p>
             <a href="#" id="clear">Clear Table</a> |
-            <a href="/api/tables">API Table Link</a> |
-            <a href="/api/waitlist">API Wait List</a>
+            <a href="/view-confirmed-resv">API Table Link</a> |
+            <a href="/view-waitlist-resv">API Wait List</a>
           </p>
         </div>
       </footer>
@@ -78,24 +78,55 @@
   <!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS LOADED FROM OUR SERVER -->
 
   <script type="text/javascript">
-    $.get("/viewArray", function (data) {
+    $.get("/view-confirmed-resv", function (data) {
       console.log(data);
-      let currResvDiv = $("#tableSection");
-      for(i=0; i<data.length;i++){
-          let pTag = $("<p>");
-        pTag.text(data);
-        currResvDiv.append(pTag);
+      for (i = 0; i < data.length; i++) {
+      
+        let dataToDisp = `email: ${data[i].cusEmail},  
+        Name : ${data[i].cusName}, 
+        phone :${data[i].phNo}, 
+        id: ${data[i].uniqId}.`;
+
+        let pTag = $("<p>");
+        pTag.text(dataToDisp);
+        $("#tableSection").append(pTag);
+
       }
     });
 
-    $.get("/waitlist", function (data) {
+    $.get("/view-waitlist-resv", function (data) {
       console.log(data);
-      let waitListDiv = $("#waitlistSection");
-      for(i=0; i<data.length;i++){
-          let pTag = $("<p>");
-        pTag.text(JSON.stringify(data[i]));
-        waitListDiv.append(pTag);
+      for (i = 0; i < data.length; i++) {
+      
+        let dataToDisp = `email: ${data[i].cusEmail},  
+        Name : ${data[i].cusName}, 
+        phone :${data[i].phNo}, 
+        id: ${data[i].uniqId}.`;
+
+        let pTag = $("<p>");
+        pTag.text(dataToDisp);
+        $("#waitlistSection").append(pTag);
+
       }
+    });
+
+
+
+    $("#clear").on("click", function (event) {
+      event.preventDefault();
+      $.ajax({
+        url: "/clearTables",
+        type: "DELETE",
+        success: function (data) {
+          console.log("deleted " + data.status);
+          alert("clearing....");
+          $("#tableSection").empty();
+          $("#waitlistSection").empty();
+
+        },
+      });
+
+      // $.delete("/clearTables", function (data) {});
     });
   </script>
 </html>

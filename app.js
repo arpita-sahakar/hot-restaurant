@@ -13,7 +13,7 @@ app.use(express.json());
 let reservations = [];
 let waitlist = [];
 
-// view routes - for displaying 
+// view routes - for displaying
 //(/ for home page)
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/home.html"));
@@ -39,35 +39,22 @@ app.post("/bookTable", function (req, res) {
     reservations.push(resvData);
     //send json response back to client
     res.json({
-        "status":true
+      status: true,
     });
     // res.json(resvData);
-
   } else if (waitlist.length < 2) {
     //if reservation booking exceeds 5 the bookings will be pushed to waitlist array.
     waitlist.push(resvData);
     res.json({
-        "status":true
+      status: true,
     });
     // res.json(resvData);
   } else {
     res.json({
-        "status":false
+      status: false,
     });
   }
 });
-
-// api route to delete reservation and waitlist from screen. 
-//client sends request and server response by clearing the data
-app.delete("/clearTables", function (req, res) {
-    // delete objects from array by emptying the array
-    reservations = [];
-    waitlist = [];
-    res.json({
-        "status":true
-    });
-
-})
 
 //when the client will ask to view all the confirmed reservations
 app.get("/view-confirmed-resv", function (req, res) {
@@ -79,6 +66,17 @@ app.get("/view-confirmed-resv", function (req, res) {
 app.get("/view-waitlist-resv", function (req, res) {
   //sending the array of reservations to client in JSON format
   res.json(waitlist);
+});
+
+// api route to delete reservation and waitlist from screen.
+//client sends request and server response by clearing the data
+app.delete("/clearTables", function (req, res) {
+  // delete objects from array by emptying the array
+  reservations = [];
+  waitlist = [];
+  res.json({
+    status: true,
+  });
 });
 
 //start the server
